@@ -5,7 +5,7 @@ describe "mocked API requests to .tokenize" do
   def run_mocked_response
     Vantiv::MockedSandbox.enable_self_mocked_requests!
 
-    Vantiv.tokenize(temporary_token: mocked_temporary_token).tap do
+    Vantiv.tokenize(temporary_token: mocked_temporary_token.name).tap do
       Vantiv::MockedSandbox.disable_self_mocked_requests!
     end
   end

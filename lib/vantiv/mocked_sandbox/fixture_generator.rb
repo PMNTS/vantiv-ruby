@@ -37,17 +37,17 @@ module Vantiv
         @paypage_driver.start
 
         TestTemporaryToken.all.each do |test_temporary_token|
-          if requires_live_paypage_response?(test_temporary_token)
-            test_card = Vantiv::TestCard.valid_account
+          if test_temporary_token.test_card
+            test_card = test_temporary_token.test_card
             mocked_payment_account_id = test_card.mocked_sandbox_payment_account_id
             live_temporary_token = @paypage_driver.get_paypage_registration_id(test_card.card_number, test_card.cvv)
           else
             mocked_payment_account_id = nil
-            live_temporary_token = test_temporary_token
+            live_temporary_token = test_temporary_token.name
           end
 
           record_tokenize_for_test_token(
-            test_temporary_token: test_temporary_token,
+            test_temporary_token_name: test_temporary_token.name,
             live_temporary_token: live_temporary_token,
             mocked_payment_account_id: mocked_payment_account_id
           )
@@ -56,10 +56,10 @@ module Vantiv
         @paypage_driver.stop
       end
 
-      def record_tokenize_for_test_token(test_temporary_token:, live_temporary_token:, mocked_payment_account_id:)
+      def record_tokenize_for_test_token(test_temporary_token_name:, live_temporary_token:, mocked_payment_account_id:)
         cert_response = Vantiv.tokenize(temporary_token: live_temporary_token)
         cert_response.body.register_token_response.payment_account_id = mocked_payment_account_id
-        file_name = "tokenize--#{test_temporary_token}"[0..94]
+        file_name = "tokenize--#{test_temporary_token_name}"[0..94]
         write_fixture_to_file(
           file_name,
           cert_response
