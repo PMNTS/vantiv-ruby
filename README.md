@@ -23,12 +23,8 @@ The gem needs the following configuration to be set on app initialization. It is
 
 ```ruby
 Vantiv.configure do |config|
-  config.merchant_id = ENV["VANTIV_MERCHANT_ID"]
   config.default_order_source = "desired-order-source"
   config.paypage_id = ENV["VANTIV_PAYPAGE_ID"]
-  
-  config.user = ENV["VANTIV_USER"]
-  config.password = ENV["VANTIV_PASSWORD"]
 
   config.default_report_group = 'default-report-group'
 end
@@ -186,7 +182,12 @@ Once the temporary token has been retrieved, it should be posted to the merchant
 In the server, once a temporary token has been received, a permanent token can be retrieved. To do so, use the `tokenize` method:
 
 ```ruby
-Vantiv.tokenize(temporary_token: 'temporary-token-here')
+Vantiv.tokenize(
+  temporary_token: 'temporary-token-here',
+  merchant_id: ENV["VANTIV_MERCHANT_ID"],
+  user: ENV["VANTIV_USER"],
+  password: ENV["VANTIV_PASSWORD"]
+)
 ```
 
 This will return a TokenizationResponse object, which responds to `success?` and `failure?`, and which returns a `card_type` and the `payment_account_id` retrieved from Vantiv. The merchant should save this token for use on future transactions.
@@ -237,7 +238,10 @@ Vantiv.auth(
   expiry_year: '2016', # expiration year for payment account id
   order_source: 'applepay', # optional order source, defaults to Vantiv.default_order_source,
   online_payment_cryptogram: 'online-payment-cryptogram', # optional, defaults to nil; used for Apple Pay
-  use_temporarily_stored_security_code: true # optional, defaults to false; used for security code matching
+  use_temporarily_stored_security_code: true, # optional, defaults to false; used for security code matching
+  merchant_id: ENV["VANTIV_MERCHANT_ID"],
+  user: ENV["VANTIV_USER"],
+  password: ENV["VANTIV_PASSWORD"]
 )
 ```
 
@@ -264,6 +268,9 @@ Amount must be less than the amount authorized.
 Vantiv.auth_reversal(
   transaction_id: 'transaction-id-from-auth', # retrieved earlier
   amount: 10000, # amount in cents, as an integer. must be less than or equal to auth amount.
+  merchant_id: ENV["VANTIV_MERCHANT_ID"],
+  user: ENV["VANTIV_USER"],
+  password: ENV["VANTIV_PASSWORD"]
 )
 
 ```
@@ -273,7 +280,12 @@ Vantiv.auth_reversal(
 Captures enable a merchant to charge a customer funds previously placed under an authorization. To place a capture, simply do:
 
 ```ruby
-Vantiv.capture(transaction_id: 'transaction-id-from-auth')
+Vantiv.capture(
+  transaction_id: 'transaction-id-from-auth',
+  merchant_id: ENV["VANTIV_MERCHANT_ID"],
+  user: ENV["VANTIV_USER"],
+  password: ENV["VANTIV_PASSWORD"]
+)
 ```
 
 The above captures the full amount placed on hold via a previous authorization.
@@ -283,7 +295,10 @@ It is possible for a merchant to capture an amount differing from the amount pla
 ```ruby
 Vantiv.capture(
   transaction_id: 'transaction-id-from-auth',
-  amount: 10000 # amount in cents
+  amount: 10000, # amount in cents
+  merchant_id: ENV["VANTIV_MERCHANT_ID"],
+  user: ENV["VANTIV_USER"],
+  password: ENV["VANTIV_PASSWORD"]
 )
 ```
 
@@ -300,7 +315,10 @@ Vantiv.auth_capture(
   expiry_month: '11', # expiration month for payment account id
   expiry_year: '2016', # expiration year for payment account id
   order_source: 'applepay', # optional order source, defaults to Vantiv.default_order_source,
-  online_payment_cryptogram: 'online-payment-cryptogram' # optional online payment cryptogram; used for Apple Pay
+  online_payment_cryptogram: 'online-payment-cryptogram', # optional online payment cryptogram; used for Apple Pay
+  merchant_id: ENV["VANTIV_MERCHANT_ID"],
+  user: ENV["VANTIV_USER"],
+  password: ENV["VANTIV_PASSWORD"]
 )
 ```
 
@@ -316,7 +334,10 @@ To perform a credit, simply:
 ```ruby
 Vantiv.credit(
   transaction_id: 'transaction-id-from-prior-transaction',
-  amount: 10000 #amount to refund in cents
+  amount: 10000, #amount to refund in cents
+  merchant_id: ENV["VANTIV_MERCHANT_ID"],
+  user: ENV["VANTIV_USER"],
+  password: ENV["VANTIV_PASSWORD"]
 )
 ```
 
