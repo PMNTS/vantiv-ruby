@@ -1,3 +1,4 @@
+require 'pry'
 require 'spec_helper'
 
 describe "mocked API requests to void" do
@@ -15,16 +16,29 @@ describe "mocked API requests to void" do
       customer_id: "not-dynamic-cust-id",
       order_id: "not-dynamic-order-id",
       expiry_month: card.expiry_month,
-      expiry_year: card.expiry_year
+      expiry_year: card.expiry_year,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
     ).transaction_id
 
-    Vantiv.void(transaction_id: transaction_id)
+    Vantiv.void(
+      transaction_id: transaction_id,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
+    )
   end
 
   def run_mocked_response
     Vantiv::MockedSandbox.enable_self_mocked_requests!
     transaction_id = rand(10 ** 17)
-    Vantiv.void(transaction_id: transaction_id).tap do
+    Vantiv.void(
+      transaction_id: transaction_id,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
+    ).tap do
       Vantiv::MockedSandbox.disable_self_mocked_requests!
     end
   end

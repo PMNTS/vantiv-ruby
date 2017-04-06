@@ -13,7 +13,10 @@ describe Vantiv::Api::Request do
     Vantiv::Api::Request.new(
       endpoint: Vantiv::Api::Endpoints::TOKENIZATION,
       body: Vantiv::Api::RequestBody.for_tokenization(
-        paypage_registration_id: "1234"
+        paypage_registration_id: "1234",
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       ),
       response_object: general_response_class.new
     ).run
@@ -21,16 +24,12 @@ describe Vantiv::Api::Request do
 
   context "running an API request when authentication fails" do
     before do
-      @cached_password = Vantiv.password
-      Vantiv.configure do |config|
-        config.password = "asdfasdf"
-      end
+      @cached_password = $test_password
+      $test_password = 'aerfdds'
     end
 
     after do
-      Vantiv.configure do |config|
-        config.password = @cached_password
-      end
+      $test_password = @cached_password
     end
 
     it "does not raise errors on standard method retrieval" do
@@ -93,7 +92,6 @@ describe Vantiv::Api::Request do
     let(:payment_account_id) { 123456789 }
 
     let(:request) do
-
       body = Vantiv::Api::RequestBody.for_auth_or_sale(
         amount: 4224,
         customer_id: "extid123",
@@ -102,7 +100,10 @@ describe Vantiv::Api::Request do
         expiry_month: "8",
         expiry_year: "2018",
         order_source: "applepay",
-        online_payment_cryptogram: online_payment_cryptogram
+        online_payment_cryptogram: online_payment_cryptogram,
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
 
       Vantiv::Api::Request.new(
@@ -147,7 +148,10 @@ END
         payment_account_id: "paymentacct123",
         order_id: "SomeOrder123",
         expiry_month: "8",
-        expiry_year: "2018"
+        expiry_year: "2018",
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
 
       Vantiv::Api::Request.new(

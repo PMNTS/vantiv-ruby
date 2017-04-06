@@ -8,7 +8,10 @@ describe "toggling mocked API requests" do
       card_number: card.card_number,
       expiry_month: card.expiry_month,
       expiry_year: card.expiry_year,
-      cvv: card.cvv
+      cvv: card.cvv,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
     )
   end
 

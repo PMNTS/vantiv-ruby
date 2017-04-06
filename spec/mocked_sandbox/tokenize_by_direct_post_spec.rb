@@ -6,7 +6,10 @@ describe "mocked API requests to tokenize_by_direct_post" do
       card_number: card.card_number,
       expiry_month: card.expiry_month,
       expiry_year: card.expiry_year,
-      cvv: card.cvv
+      cvv: card.cvv,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
     )
   end
 
@@ -16,7 +19,10 @@ describe "mocked API requests to tokenize_by_direct_post" do
       card_number: card.card_number,
       expiry_month: card.expiry_month,
       expiry_year: card.expiry_year,
-      cvv: card.cvv
+      cvv: card.cvv,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
     ).tap do
       Vantiv::MockedSandbox.disable_self_mocked_requests!
     end

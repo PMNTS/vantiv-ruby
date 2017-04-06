@@ -10,7 +10,10 @@ describe "capturing authorizations" do
       customer_id: "Anything-#{rand(10000)}",
       order_id: "AnyOrder#{rand(100000)}",
       expiry_month: test_account.expiry_month,
-      expiry_year: test_account.expiry_year
+      expiry_year: test_account.expiry_year,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
     ).transaction_id
   end
 
@@ -19,7 +22,10 @@ describe "capturing authorizations" do
   def run_capture
     Vantiv.capture(
       transaction_id: transaction_id,
-      amount: amount
+      amount: amount,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
     )
   end
 

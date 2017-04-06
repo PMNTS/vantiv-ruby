@@ -3,12 +3,11 @@ require 'securerandom'
 module Vantiv
   module Api
     class Authentication
-      attr_accessor :user, :password
-      def user
-        Vantiv.user
-      end
-      def password
-        Vantiv.password
+      attr_reader :user, :password
+
+      def initialize(user:, password:)
+        @user     = user
+        @password = password
       end
     end
 
@@ -18,16 +17,16 @@ module Vantiv
 
       attr_accessor :version, :authentication, :xmlns
 
-      def initialize(card: nil, transaction: nil, payment_account: nil)
+      def initialize(card: nil, transaction: nil, payment_account: nil, merchant_id: nil, user: nil, password: nil)
         @card = card
         @transaction = transaction
         @payment_account = payment_account
 
-        @merchant_id = Vantiv.merchant_id
+        @merchant_id = merchant_id
         @application_id = SecureRandom.hex(12)
         @report_group = Vantiv.default_report_group
 
-        @authentication = Authentication.new
+        @authentication = Authentication.new(user: user, password: password)
       end
 
       def to_json
@@ -41,7 +40,7 @@ module Vantiv
       def self.for_auth_or_sale(amount:, customer_id:, order_id:, payment_account_id:,
           expiry_month:, expiry_year:, cvv: nil, order_source: Vantiv.default_order_source,
           online_payment_cryptogram: nil, original_network_transaction_id: nil,
-          processing_type: nil, original_transaction_amount: nil)
+          processing_type: nil, original_transaction_amount: nil, merchant_id:, user:, password:)
 
         if online_payment_cryptogram
           cardholder_authentication = CardholderAuthentication.new(
@@ -72,27 +71,46 @@ module Vantiv
         new(
           transaction: transaction,
           card: card,
-          payment_account: payment_account
+          payment_account: payment_account,
+          merchant_id: merchant_id,
+          user: user,
+          password: password
         )
       end
 
-      def self.for_auth_reversal(transaction_id:, amount: nil)
+      def self.for_auth_reversal(transaction_id:, amount: nil, merchant_id:, user:, password:)
         transaction = Transaction.new(id: transaction_id, amount_in_cents: amount)
-        new(transaction: transaction)
+        new(
+          transaction: transaction,
+          merchant_id: merchant_id,
+          user: user,
+          password: password
+        )
       end
 
-      def self.for_capture(transaction_id:, amount: nil)
+      def self.for_capture(transaction_id:, amount: nil, merchant_id:, user:, password:)
         transaction = Transaction.new(id: transaction_id, amount_in_cents: amount)
-        new(transaction: transaction)
+        new(
+          transaction: transaction,
+          merchant_id: merchant_id,
+          user: user,
+          password: password
+        )
       end
 
-      def self.for_credit(transaction_id:, amount: nil)
+      def self.for_credit(transaction_id:, amount: nil, merchant_id:, user:, password:)
         transaction = Transaction.new(id: transaction_id, amount_in_cents: amount)
-        new(transaction: transaction)
+        new(
+          transaction: transaction,
+          merchant_id: merchant_id,
+          user: user,
+          password: password
+        )
       end
 
       def self.for_return(amount:, customer_id:, order_id:, payment_account_id:,
-          expiry_month:, expiry_year:, order_source: Vantiv.default_order_source)
+          expiry_month:, expiry_year:, order_source: Vantiv.default_order_source,
+          merchant_id:, user:, password:)
         transaction = Transaction.new(
           order_id: order_id,
           amount_in_cents: amount,
@@ -108,28 +126,46 @@ module Vantiv
         new(
           transaction: transaction,
           card: card,
-          payment_account: payment_account
+          payment_account: payment_account,
+          merchant_id: merchant_id,
+          user: user,
+          password: password
         )
       end
 
-      def self.for_tokenization(paypage_registration_id:)
+      def self.for_tokenization(paypage_registration_id:, merchant_id:, user:, password:)
         card = Card.new(paypage_registration_id: paypage_registration_id)
-        new(card: card)
+        new(
+          card: card,
+          merchant_id: merchant_id,
+          user: user,
+          password: password
+        )
       end
 
-      def self.for_direct_post_tokenization(card_number:, expiry_month:, expiry_year:, cvv:)
+      def self.for_direct_post_tokenization(card_number:, expiry_month:, expiry_year:, cvv:, merchant_id:, user:, password:)
         card = Card.new(
           account_number: card_number,
           expiry_month: expiry_month,
           expiry_year: expiry_year,
           cvv: cvv
         )
-        new(card: card)
+        new(
+          card: card,
+          merchant_id: merchant_id,
+          user: user,
+          password: password
+        )
       end
 
-      def self.for_void(transaction_id:)
+      def self.for_void(transaction_id:, merchant_id:, user:, password:)
         transaction = Transaction.new(id: transaction_id)
-        new(transaction: transaction)
+        new(
+          transaction: transaction,
+          merchant_id: merchant_id,
+          user: user,
+          password: password
+        )
       end
 
     end

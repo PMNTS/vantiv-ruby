@@ -10,7 +10,10 @@ describe "account updater" do
       customer_id: "1234",
       order_id: "SomeOrder123",
       expiry_month: test_account.expiry_month,
-      expiry_year: test_account.expiry_year
+      expiry_year: test_account.expiry_year,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
     ).account_updater
   end
 
@@ -87,7 +90,10 @@ describe "account updater" do
         customer_id: "doesntmatter",
         order_id: "orderblah",
         expiry_month: test_account.expiry_month,
-        expiry_year: test_account.expiry_year
+        expiry_year: test_account.expiry_year,
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
       expect(auth_response.success?).to eq true
     end
@@ -138,7 +144,10 @@ describe "account updater" do
         customer_id: "doesntmatter",
         order_id: "orderblah",
         expiry_month: test_account.expiry_month,
-        expiry_year: test_account.expiry_year
+        expiry_year: test_account.expiry_year,
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
       expect(auth_response.success?).to eq true
     end

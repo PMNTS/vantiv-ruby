@@ -16,7 +16,10 @@ describe "processing standalone refunds" do
       order_id: order_id,
       payment_account_id: payment_account_id,
       expiry_month: test_account.expiry_month,
-      expiry_year: test_account.expiry_year
+      expiry_year: test_account.expiry_year,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
     )
   end
 
@@ -42,7 +45,10 @@ describe "processing standalone refunds" do
         payment_account_id: payment_account_id,
         expiry_month: test_account.expiry_month,
         expiry_year: test_account.expiry_year,
-        order_source: "custom-order-source"
+        order_source: "custom-order-source",
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
     end
 

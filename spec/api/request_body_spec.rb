@@ -3,7 +3,6 @@ require 'spec_helper'
 describe Vantiv::Api::RequestBody do
   shared_examples "a request body" do
     it "includes the merchant id" do
-      allow(Vantiv).to receive(:merchant_id).and_return "merchant-id"
       expect(request_body.merchant_id).to eq "merchant-id"
     end
 
@@ -27,7 +26,10 @@ describe Vantiv::Api::RequestBody do
         card_number: card_number,
         expiry_month: expiry_month,
         expiry_year: expiry_year,
-        cvv: cvv
+        cvv: cvv,
+        merchant_id: "merchant-id",
+        user: $test_user,
+        password: $test_password
       )
     end
 
@@ -44,7 +46,10 @@ describe Vantiv::Api::RequestBody do
   describe ".for_tokenization" do
     subject(:request_body) do
       Vantiv::Api::RequestBody.for_tokenization(
-        paypage_registration_id: @paypage_registration_id
+        paypage_registration_id: @paypage_registration_id,
+        merchant_id: "merchant-id",
+        user: $test_user,
+        password: $test_password
       )
     end
 
@@ -63,7 +68,10 @@ describe Vantiv::Api::RequestBody do
     subject(:request_body) do
       Vantiv::Api::RequestBody.for_capture(
         amount: @amount,
-        transaction_id: "transactionid123"
+        transaction_id: "transactionid123",
+        merchant_id: "merchant-id",
+        user: $test_user,
+        password: $test_password
       )
     end
 
@@ -106,7 +114,10 @@ describe Vantiv::Api::RequestBody do
         payment_account_id: "paymentacct123",
         order_id: "SomeOrder123",
         expiry_month: "8",
-        expiry_year: "2018"
+        expiry_year: "2018",
+        merchant_id: "merchant-id",
+        user: $test_user,
+        password: $test_password
       )
     end
 
@@ -121,7 +132,10 @@ describe Vantiv::Api::RequestBody do
           order_id: "SomeOrder123",
           expiry_month: "8",
           expiry_year: "2018",
-          order_source: "my-custom-order-source"
+          order_source: "my-custom-order-source",
+          merchant_id: "merchant-id",
+          user: $test_user,
+          password: $test_password
         )
       end
 
@@ -139,7 +153,10 @@ describe Vantiv::Api::RequestBody do
           order_id: "SomeOrder123",
           expiry_month: "8",
           expiry_year: "2018",
-          online_payment_cryptogram: "my-online-payment-cryptogram"
+          online_payment_cryptogram: "my-online-payment-cryptogram",
+          merchant_id: "merchant-id",
+          user: $test_user,
+          password: $test_password
         )
       end
 
@@ -157,7 +174,10 @@ describe Vantiv::Api::RequestBody do
           payment_account_id: "paymentacct123",
           order_id: "SomeOrder123",
           expiry_month: "8",
-          expiry_year: "2018"
+          expiry_year: "2018",
+          merchant_id: "merchant-id",
+          user: $test_user,
+          password: $test_password
         )
       end
 
@@ -175,7 +195,10 @@ describe Vantiv::Api::RequestBody do
           order_id: "SomeOrder123",
           expiry_month: "8",
           expiry_year: "2018",
-          original_network_transaction_id: "my-original-network-transaction-id"
+          original_network_transaction_id: "my-original-network-transaction-id",
+          merchant_id: "merchant-id",
+          user: $test_user,
+          password: $test_password
         )
       end
 
@@ -192,7 +215,10 @@ describe Vantiv::Api::RequestBody do
           payment_account_id: "paymentacct123",
           order_id: "SomeOrder123",
           expiry_month: "8",
-          expiry_year: "2018"
+          expiry_year: "2018",
+          merchant_id: "merchant-id",
+          user: $test_user,
+          password: $test_password
         )
       end
 
@@ -210,7 +236,10 @@ describe Vantiv::Api::RequestBody do
           order_id: "SomeOrder123",
           expiry_month: "8",
           expiry_year: "2018",
-          original_transaction_amount: 10000
+          original_transaction_amount: 10000,
+          merchant_id: "merchant-id",
+          user: $test_user,
+          password: $test_password
         )
       end
 
@@ -227,7 +256,10 @@ describe Vantiv::Api::RequestBody do
           payment_account_id: "paymentacct123",
           order_id: "SomeOrder123",
           expiry_month: "8",
-          expiry_year: "2018"
+          expiry_year: "2018",
+          merchant_id: "merchant-id",
+          user: $test_user,
+          password: $test_password
         )
       end
 
@@ -245,7 +277,10 @@ describe Vantiv::Api::RequestBody do
           order_id: "SomeOrder123",
           expiry_month: "8",
           expiry_year: "2018",
-          processing_type: "initialRecurring"
+          processing_type: "initialRecurring",
+          merchant_id: "merchant-id",
+          user: $test_user,
+          password: $test_password
         )
       end
 
@@ -262,7 +297,10 @@ describe Vantiv::Api::RequestBody do
           payment_account_id: "paymentacct123",
           order_id: "SomeOrder123",
           expiry_month: "8",
-          expiry_year: "2018"
+          expiry_year: "2018",
+          merchant_id: "merchant-id",
+          user: $test_user,
+          password: $test_password
         )
       end
 
@@ -322,7 +360,10 @@ describe Vantiv::Api::RequestBody do
         payment_account_id: "paymentacct123",
         order_id: 123,
         expiry_month: "12",
-        expiry_year: "2099"
+        expiry_year: "2099",
+        merchant_id: "merchant-id",
+        user: $test_user,
+        password: $test_password
       )
       expect(body.transaction.order_id).to eq "123"
     end
@@ -333,7 +374,10 @@ describe Vantiv::Api::RequestBody do
     subject(:request_body) do
       Vantiv::Api::RequestBody.for_auth_reversal(
         amount: @amount,
-        transaction_id: "transactionid123"
+        transaction_id: "transactionid123",
+        merchant_id: "merchant-id",
+        user: $test_user,
+        password: $test_password
       )
     end
 
@@ -372,7 +416,10 @@ describe Vantiv::Api::RequestBody do
     subject(:request_body) do
       Vantiv::Api::RequestBody.for_credit(
         amount: @amount,
-        transaction_id: "transactionid123"
+        transaction_id: "transactionid123",
+        merchant_id: "merchant-id",
+        user: $test_user,
+        password: $test_password
       )
     end
 
@@ -415,7 +462,10 @@ describe Vantiv::Api::RequestBody do
         payment_account_id: "paymentacct123",
         order_id: "SomeOrder123",
         expiry_month: "8",
-        expiry_year: "2018"
+        expiry_year: "2018",
+        merchant_id: "merchant-id",
+        user: $test_user,
+        password: $test_password
       )
     end
 
@@ -434,7 +484,10 @@ describe Vantiv::Api::RequestBody do
           order_id: "SomeOrder123",
           expiry_month: "8",
           expiry_year: "2018",
-          order_source: "my-custom-order-source"
+          order_source: "my-custom-order-source",
+          merchant_id: "merchant-id",
+          user: $test_user,
+          password: $test_password
         )
       end
 
@@ -487,7 +540,10 @@ describe Vantiv::Api::RequestBody do
   describe ".for_void" do
     subject(:request_body) do
       Vantiv::Api::RequestBody.for_void(
-        transaction_id: "transactionid123"
+        transaction_id: "transactionid123",
+        merchant_id: "merchant-id",
+        user: $test_user,
+        password: $test_password
       )
     end
 

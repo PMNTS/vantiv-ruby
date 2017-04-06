@@ -1,12 +1,9 @@
 require 'spec_helper'
 
 describe "Vantiv configuration" do
-  [:merchant_id,
-   :default_report_group,
+  [:default_report_group,
    :default_order_source,
    :paypage_id,
-   :user,
-   :password
   ].each do |config_var|
     describe "- accessing #{config_var}" do
 

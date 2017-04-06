@@ -8,7 +8,10 @@ describe "processing voids" do
 
   subject(:response) do
     Vantiv.void(
-      transaction_id: prior_transaction.transaction_id
+      transaction_id: prior_transaction.transaction_id,
+      merchant_id:    $test_merchant_id,
+      user:           $test_user,
+      password:       $test_password
     )
   end
 
@@ -20,9 +23,17 @@ describe "processing voids" do
         order_id: order_id,
         payment_account_id: payment_account_id,
         expiry_month: test_account.expiry_month,
-        expiry_year: test_account.expiry_year
+        expiry_year: test_account.expiry_year,
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
-      Vantiv.capture(transaction_id: auth.transaction_id)
+      Vantiv.capture(
+        transaction_id: auth.transaction_id,
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
+      )
     end
 
     it "returns success when transaction is received" do
@@ -48,9 +59,18 @@ describe "processing voids" do
         order_id: order_id,
         payment_account_id: payment_account_id,
         expiry_month: test_account.expiry_month,
-        expiry_year: test_account.expiry_year
+        expiry_year: test_account.expiry_year,
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
-      Vantiv.credit(transaction_id: sale.transaction_id, amount: 5)
+      Vantiv.credit(
+        transaction_id: sale.transaction_id,
+        amount: 5,
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
+      )
     end
 
     it "returns success when transaction is received" do
@@ -76,7 +96,10 @@ describe "processing voids" do
         order_id: order_id,
         payment_account_id: payment_account_id,
         expiry_month: test_account.expiry_month,
-        expiry_year: test_account.expiry_year
+        expiry_year: test_account.expiry_year,
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
     end
 
@@ -103,7 +126,10 @@ describe "processing voids" do
         order_id: order_id,
         payment_account_id: payment_account_id,
         expiry_month: test_account.expiry_month,
-        expiry_year: test_account.expiry_year
+        expiry_year: test_account.expiry_year,
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
     end
 

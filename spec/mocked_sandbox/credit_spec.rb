@@ -15,10 +15,19 @@ describe "mocked API requests to credit" do
       customer_id: "not-dynamic-cust-id",
       order_id: "not-dynamic-order-id",
       expiry_month: card.expiry_month,
-      expiry_year: card.expiry_year
+      expiry_year: card.expiry_year,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
     ).transaction_id
 
-    Vantiv.credit(transaction_id: transaction_id, amount: 10100)
+    Vantiv.credit(
+      transaction_id: transaction_id,
+      amount: 10100,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
+    )
   end
 
   def run_mocked_response
@@ -27,7 +36,10 @@ describe "mocked API requests to credit" do
 
     Vantiv.credit(
       transaction_id: transaction_id,
-      amount: 10100
+      amount: 10100,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
     ).tap do
       Vantiv::MockedSandbox.disable_self_mocked_requests!
     end

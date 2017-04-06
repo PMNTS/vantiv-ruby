@@ -8,7 +8,10 @@ describe "auth_capture (Sale)" do
       customer_id: customer_external_id,
       order_id: "SomeOrder123",
       expiry_month: test_account.expiry_month,
-      expiry_year: test_account.expiry_year
+      expiry_year: test_account.expiry_year,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
     )
   end
 
@@ -112,12 +115,12 @@ describe "auth_capture (Sale)" do
     let(:test_account) { Vantiv::TestAccount.valid_account }
 
     before do
-      @vantiv_user = Vantiv.user
-      Vantiv.user = "fake_user"
+      @vantiv_user = $user
+      $user = "fake_user"
     end
 
     after do
-      Vantiv.user = @vantiv_user
+      $user = @vantiv_user
     end
 
     it "responds that the authorization failed" do
@@ -154,7 +157,10 @@ describe "auth_capture (Sale)" do
         order_id: "SomeOrder123",
         expiry_month: test_account.expiry_month,
         expiry_year: test_account.expiry_year,
-        order_source: "custom-order-source"
+        order_source: "custom-order-source",
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
     end
 
@@ -183,7 +189,10 @@ describe "auth_capture (Sale)" do
         order_id: "SomeOrder123",
         expiry_month: test_account.expiry_month,
         expiry_year: test_account.expiry_year,
-        online_payment_cryptogram: "my-online-payment-cryptogram"
+        online_payment_cryptogram: "my-online-payment-cryptogram",
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
     end
 
@@ -212,7 +221,10 @@ describe "auth_capture (Sale)" do
         order_id: "SomeOrder123",
         expiry_month: test_account.expiry_month,
         expiry_year: test_account.expiry_year,
-        original_network_transaction_id: "my-original-network-transaction-id"
+        original_network_transaction_id: "my-original-network-transaction-id",
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
     end
 
@@ -241,7 +253,10 @@ describe "auth_capture (Sale)" do
         order_id: "SomeOrder123",
         expiry_month: test_account.expiry_month,
         expiry_year: test_account.expiry_year,
-        original_transaction_amount: 10000
+        original_transaction_amount: 10000,
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
     end
 
@@ -270,7 +285,10 @@ describe "auth_capture (Sale)" do
         order_id: "SomeOrder123",
         expiry_month: test_account.expiry_month,
         expiry_year: test_account.expiry_year,
-        processing_type: "initialRecurring"
+        processing_type: "initialRecurring",
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
     end
 

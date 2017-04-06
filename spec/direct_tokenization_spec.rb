@@ -6,7 +6,10 @@ describe "directly tokenizing card data" do
       card_number: card.card_number,
       expiry_month: card.expiry_month,
       expiry_year: card.expiry_year,
-      cvv: card.cvv
+      cvv: card.cvv,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
     )
   end
 
@@ -35,7 +38,10 @@ describe "directly tokenizing card data" do
         customer_id: "doesntmatter",
         order_id: "orderblah",
         expiry_month: card.expiry_month,
-        expiry_year: card.expiry_year
+        expiry_year: card.expiry_year,
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
       expect(auth_response.success?).to eq true
     end
@@ -95,7 +101,10 @@ describe "directly tokenizing card data" do
         customer_id: "doesntmatter",
         order_id: "orderblah",
         expiry_month: card.expiry_month,
-        expiry_year: card.expiry_year
+        expiry_year: card.expiry_year,
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
       expect(auth_response.success?).to eq false
       expect(auth_response.expired_card?).to eq true
@@ -127,7 +136,10 @@ describe "directly tokenizing card data" do
         customer_id: "doesntmatter",
         order_id: "orderblah",
         expiry_month: card.expiry_month,
-        expiry_year: card.expiry_year
+        expiry_year: card.expiry_year,
+        merchant_id: $test_merchant_id,
+        user: $test_user,
+        password: $test_password
       )
       expect(auth_response.success?).to eq false
       expect(auth_response.invalid_account_number?).to eq true

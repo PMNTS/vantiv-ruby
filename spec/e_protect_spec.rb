@@ -3,7 +3,12 @@ require 'vantiv/certification/paypage_driver'
 
 describe "promoting a temporary token to a permanent token" do
   let(:response) do
-    Vantiv.tokenize(temporary_token: paypage_registration_id)
+    Vantiv.tokenize(
+      temporary_token: paypage_registration_id,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
+    )
   end
 
   before :all do
@@ -46,7 +51,10 @@ describe "promoting a temporary token to a permanent token" do
           customer_id: "doesntmatter",
           order_id: "orderblah",
           expiry_month: '01',
-          expiry_year: '16'
+          expiry_year: '16',
+          merchant_id: $test_merchant_id,
+          user: $test_user,
+          password: $test_password
         )
         expect(auth_response.success?).to eq true
       end
@@ -110,7 +118,10 @@ describe "promoting a temporary token to a permanent token" do
           customer_id: "doesntmatter",
           order_id: "orderblah",
           expiry_month: '01',
-          expiry_year: '16'
+          expiry_year: '16',
+          merchant_id: $test_merchant_id,
+          user: $test_user,
+          password: $test_password
         )
         expect(auth_response.success?).to eq false
         expect(auth_response.invalid_account_number?).to eq true
@@ -187,7 +198,10 @@ describe "promoting a temporary token to a permanent token" do
           customer_id: "doesntmatter",
           order_id: "orderblah",
           expiry_month: '01',
-          expiry_year: '16'
+          expiry_year: '16',
+          merchant_id: $test_merchant_id,
+          user: $test_user,
+          password: $test_password
         )
         expect(auth_response.success?).to eq true
       end
@@ -251,7 +265,10 @@ describe "promoting a temporary token to a permanent token" do
           customer_id: "doesntmatter",
           order_id: "orderblah",
           expiry_month: '01',
-          expiry_year: '16'
+          expiry_year: '16',
+          merchant_id: $test_merchant_id,
+          user: $test_user,
+          password: $test_password
         )
         expect(auth_response.success?).to eq false
         expect(auth_response.invalid_account_number?).to eq true

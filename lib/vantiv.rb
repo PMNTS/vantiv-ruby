@@ -1,3 +1,4 @@
+require 'pry'
 require 'json'
 require 'net/http'
 require 'representable/xml'
@@ -10,14 +11,17 @@ require 'vantiv/mocked_sandbox'
 require 'vantiv/paypage'
 
 module Vantiv
-  def self.tokenize(temporary_token:)
+  def self.tokenize(temporary_token:, merchant_id:, user:, password:)
     if temporary_token == "" or temporary_token == nil
       raise ArgumentError.new("Blank temporary token (PaypageRegistrationID): \n
                                Check that paypage error handling is implemented correctly.")
     end
 
     body = Api::RequestBody.for_tokenization(
-      paypage_registration_id: temporary_token
+      paypage_registration_id: temporary_token,
+      merchant_id: merchant_id,
+      user: user,
+      password: password
     )
     Api::Request.new(
       endpoint: Api::Endpoints::TOKENIZATION,
@@ -26,12 +30,16 @@ module Vantiv
     ).run
   end
 
-  def self.tokenize_by_direct_post(card_number:, expiry_month:, expiry_year:, cvv:)
+  def self.tokenize_by_direct_post(card_number:, expiry_month:, expiry_year:, cvv:,
+    merchant_id:, user:, password:)
     body = Api::RequestBody.for_direct_post_tokenization(
       card_number: card_number,
       expiry_month: expiry_month,
       expiry_year: expiry_year,
-      cvv: cvv
+      cvv: cvv,
+      merchant_id: merchant_id,
+      user: user,
+      password: password
     )
     Api::Request.new(
       endpoint: Api::Endpoints::TOKENIZATION,
@@ -43,7 +51,7 @@ module Vantiv
   def self.auth(amount:, payment_account_id:, customer_id:, order_id:, expiry_month:, expiry_year:,
     order_source: Vantiv.default_order_source, use_temporarily_stored_security_code: false,
     online_payment_cryptogram: nil, original_network_transaction_id: nil, processing_type: nil,
-    original_transaction_amount: nil)
+    original_transaction_amount: nil, merchant_id:, user:, password:)
 
     # RE use_temporarily_stored_security_code
     # From XML Docs:
@@ -66,7 +74,10 @@ module Vantiv
       online_payment_cryptogram: online_payment_cryptogram,
       original_network_transaction_id: original_network_transaction_id,
       original_transaction_amount: original_transaction_amount,
-      processing_type: processing_type
+      processing_type: processing_type,
+      merchant_id: merchant_id,
+      user: user,
+      password: password
     )
     Api::Request.new(
       endpoint: Api::Endpoints::AUTHORIZATION,
@@ -75,10 +86,13 @@ module Vantiv
     ).run
   end
 
-  def self.auth_reversal(transaction_id:, amount: nil)
+  def self.auth_reversal(transaction_id:, amount: nil, merchant_id:, user:, password:)
     body = Api::RequestBody.for_auth_reversal(
       transaction_id: transaction_id,
-      amount: amount
+      amount: amount,
+      merchant_id: merchant_id,
+      user: user,
+      password: password
     )
 
     Api::Request.new(
@@ -88,10 +102,13 @@ module Vantiv
     ).run
   end
 
-  def self.capture(transaction_id:, amount: nil)
+  def self.capture(transaction_id:, amount: nil, merchant_id:, user:, password:)
     body = Api::RequestBody.for_capture(
       transaction_id: transaction_id,
-      amount: amount
+      amount: amount,
+      merchant_id: merchant_id,
+      user: user,
+      password: password
     )
 
     Api::Request.new(
@@ -104,7 +121,7 @@ module Vantiv
   def self.auth_capture(amount:, payment_account_id:, customer_id:, order_id:,
       expiry_month:, expiry_year:, order_source: Vantiv.default_order_source,
       online_payment_cryptogram: nil, original_network_transaction_id: nil, processing_type: nil,
-      original_transaction_amount: nil)
+      original_transaction_amount: nil, merchant_id:, user:, password:)
     body = Api::RequestBody.for_auth_or_sale(
       amount: amount,
       order_id: order_id,
@@ -116,7 +133,10 @@ module Vantiv
       online_payment_cryptogram: online_payment_cryptogram,
       original_network_transaction_id: original_network_transaction_id,
       original_transaction_amount: original_transaction_amount,
-      processing_type: processing_type
+      processing_type: processing_type,
+      merchant_id: merchant_id,
+      user: user,
+      password: password
     )
     Api::Request.new(
       endpoint: Api::Endpoints::SALE,
@@ -127,10 +147,13 @@ module Vantiv
 
   # NOTE: ActiveMerchant's #refund... only for use on a capture or sale it seems
   #       -> 'returns' are refunds too, credits are tied to a sale/capture, returns can be willy nilly
-  def self.credit(transaction_id:, amount: nil)
+  def self.credit(transaction_id:, amount: nil, merchant_id:, user:, password:)
     body = Api::RequestBody.for_credit(
       amount: amount,
-      transaction_id: transaction_id
+      transaction_id: transaction_id,
+      merchant_id: merchant_id,
+      user: user,
+      password: password
     )
     Api::Request.new(
       endpoint: Api::Endpoints::CREDIT,
@@ -140,7 +163,8 @@ module Vantiv
   end
 
   def self.refund(amount:, payment_account_id:, customer_id:, order_id:,
-      expiry_month:, expiry_year:, order_source: Vantiv.default_order_source)
+      expiry_month:, expiry_year:, order_source: Vantiv.default_order_source,
+      merchant_id:, user:, password:)
     body = Api::RequestBody.for_return(
       amount: amount,
       customer_id: customer_id,
@@ -148,7 +172,10 @@ module Vantiv
       payment_account_id: payment_account_id,
       expiry_month: expiry_month,
       expiry_year: expiry_year,
-      order_source: order_source
+      order_source: order_source,
+      merchant_id: merchant_id,
+      user: user,
+      password: password
     )
     Api::Request.new(
       endpoint: Api::Endpoints::RETURN,
@@ -158,10 +185,16 @@ module Vantiv
   end
 
   # NOTE: can void credits
-  def self.void(transaction_id:)
+  def self.void(transaction_id:, merchant_id:, user:, password:)
+    body = Api::RequestBody.for_void(
+      transaction_id: transaction_id,
+      merchant_id: merchant_id,
+      user: user,
+      password: password
+    )
     Api::Request.new(
       endpoint: Api::Endpoints::VOID,
-      body: Api::RequestBody.for_void(transaction_id: transaction_id),
+      body: body,
       response_object: Api::TiedTransactionResponse.new(:void)
     ).run
   end
@@ -171,8 +204,8 @@ module Vantiv
   end
 
   class << self
-    %i[ environment merchant_id default_report_group
-        default_order_source paypage_id user password ].freeze.each do |config_var|
+    %i[ environment default_report_group
+        default_order_source paypage_id ].freeze.each do |config_var|
 
       define_method(config_var) do
         instance_variable_get("@#{config_var}").tap do |value|

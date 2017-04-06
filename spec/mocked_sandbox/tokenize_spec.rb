@@ -5,7 +5,12 @@ describe "mocked API requests to .tokenize" do
   def run_mocked_response
     Vantiv::MockedSandbox.enable_self_mocked_requests!
 
-    Vantiv.tokenize(temporary_token: mocked_temporary_token).tap do
+    Vantiv.tokenize(
+      temporary_token: mocked_temporary_token,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
+    ).tap do
       Vantiv::MockedSandbox.disable_self_mocked_requests!
     end
   end
@@ -13,7 +18,12 @@ describe "mocked API requests to .tokenize" do
   let(:mocked_response) { run_mocked_response }
 
   let(:live_response) do
-    Vantiv.tokenize(temporary_token: live_temporary_token)
+    Vantiv.tokenize(
+      temporary_token: live_temporary_token,
+      merchant_id: $test_merchant_id,
+      user: $test_user,
+      password: $test_password
+    )
   end
 
   before :all do
