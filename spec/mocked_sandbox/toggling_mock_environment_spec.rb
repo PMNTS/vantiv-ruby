@@ -44,7 +44,6 @@ describe "toggling mocked API requests" do
     expect{
       Vantiv::MockedSandbox.enable_self_mocked_requests!
     }.to raise_error(/cannot mock in production/)
-    expect(Vantiv::MockedSandbox::ApiRequest).to_not receive :run
     response
     Vantiv.configure do |config|
       config.environment = Vantiv::Environment::PRECERTIFICATION
