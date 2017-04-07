@@ -23,7 +23,7 @@ class TransactionRequestRepresenterXml < Representable::Decorator
     property :billing_country, as: :country
   end
 
-  property :card, class: Vantiv::Api::Card, if: ->(_) { type != :registerTokenRequest && !card&.paypage_registration_id } do
+  property :card, class: Vantiv::Api::Card, if: ->(_) { type != :registerTokenRequest && (card && !card.paypage_registration_id) } do
     self.representation_wrap = ->(_) { !!payment_account_id ? :token : :card }
 
     property :type
@@ -38,14 +38,14 @@ class TransactionRequestRepresenterXml < Representable::Decorator
 
   property :accountNumber,
            if: ->(_) { type == :registerTokenRequest },
-           getter: ->(represented:, **) { represented.card&.account_number }
+           getter: ->(represented:, **) { represented.card && represented.card.account_number }
 
   property :cardValidationNum,
            if: ->(_) { type == :registerTokenRequest },
-           getter: ->(represented:, **) { represented.card&.cvv }
+           getter: ->(represented:, **) { represented.card && represented.card.cvv }
 
   property :paypageRegistrationId,
-           getter: ->(represented:, **) { represented.card&.paypage_registration_id }
+           getter: ->(represented:, **) { represented.card && represented.card.paypage_registration_id }
 
   property :cardholder_authentication, class: Vantiv::Api::CardholderAuthentication do
     self.representation_wrap = :cardholderAuthentication
